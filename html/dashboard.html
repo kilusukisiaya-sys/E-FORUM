@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="E-Forum Dashboard - Browse and manage discussions">
+    <title>Dashboard - E-Forum</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="navbar-brand"><a href="../index.html" style="color: var(--surface-color);">E-Forum</a></div>
+            <ul class="navbar-nav">
+                <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+                <li><a href="categories.html" class="nav-link">Categories</a></li>
+                <li><a href="profile.html" class="nav-link">Profile</a></li>
+                <li><a href="#" id="logoutBtn" class="nav-link">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-5">
+        <!-- Header Section -->
+        <div class="dashboard-header mb-5">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1>Forum Dashboard</h1>
+                    <p class="text-light">Welcome back! Browse and participate in discussions</p>
+                </div>
+                <a href="create-thread.html" class="btn btn-accent">Create New Discussion</a>
+            </div>
+        </div>
+
+        <!-- Search and Filter Section -->
+        <div class="search-filter-section mb-4">
+            <div class="search-box">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="form-control" 
+                    placeholder="Search discussions..."
+                >
+            </div>
+            <div class="filter-options mt-3">
+                <select id="categoryFilter" class="form-control">
+                    <option value="">All Categories</option>
+                    <option value="technology">Technology</option>
+                    <option value="business">Business</option>
+                    <option value="education">Education</option>
+                    <option value="health">Health</option>
+                    <option value="entertainment">Entertainment</option>
+                </select>
+                <select id="sortFilter" class="form-control ml-2">
+                    <option value="recent">Most Recent</option>
+                    <option value="popular">Most Popular</option>
+                    <option value="trending">Trending</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Discussions List -->
+        <div id="discussionsList" class="discussions-container">
+            <!-- Discussion items will be loaded here via JavaScript -->
+            <div class="loading-spinner">Loading discussions...</div>
+        </div>
+
+        <!-- Pagination -->
+        <div id="paginationContainer" class="pagination-container mt-5">
+            <!-- Pagination controls will be loaded here via JavaScript -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer mt-5">
+        <div class="container text-center">
+            <p>&copy; 2025 E-Forum. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Alert Messages -->
+    <div id="alertContainer"></div>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/dashboard.js"></script>
+</body>
+</html>

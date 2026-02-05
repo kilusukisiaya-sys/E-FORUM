@@ -1,0 +1,138 @@
+<?php
+// Enable error reporting
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// Check if user is logged in (optional)
+session_start();
+$isLoggedIn = isset($_SESSION['user_id']);
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="E-Forum - A professional online discussion forum platform for knowledge sharing and community engagement">
+    <title>E-Forum - Professional Discussion Platform</title>
+    <!-- CSS Links -->
+    <link rel="stylesheet" href="variables.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="landing.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="navbar-brand"><a href="index.php" style="color: inherit; text-decoration: none;">E-Forum</a></div>
+            <ul class="navbar-nav">
+                <li><a href="#features" class="nav-link">Features</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <?php if ($isLoggedIn): ?>
+                    <li><a href="pages/dashboard.php" class="nav-link">Dashboard</a></li>
+                    <li><a href="pages/logout.php" class="btn btn-accent">Logout</a></li>
+                <?php else: ?>
+                    <li><a href="pages/login.php" class="nav-link">Login</a></li>
+                    <li><a href="pages/register.php" class="btn btn-accent">Register</a></li>
+                <?php endif; ?>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero section-padding">
+        <div class="container text-center">
+            <h1>Welcome to E-Forum</h1>
+            <p class="hero-subtitle">A Professional Platform for Knowledge Sharing and Community Engagement</p>
+            <div class="hero-cta mt-4">
+                <?php if ($isLoggedIn): ?>
+                    <a href="pages/dashboard.php" class="btn btn-accent">Go to Dashboard</a>
+                    <a href="pages/profile.php" class="btn btn-secondary ml-2">My Profile</a>
+                <?php else: ?>
+                    <a href="pages/register.php" class="btn btn-accent">Get Started</a>
+                    <a href="pages/login.php" class="btn btn-secondary ml-2">Sign In</a>
+                <?php endif; ?>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features section-padding">
+        <div class="container">
+            <h2 class="text-center mb-5">Key Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">💬</div>
+                    <h3>Create Discussions</h3>
+                    <p>Start new discussion threads on topics that matter to you and engage with the community.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💭</div>
+                    <h3>Reply & Discuss</h3>
+                    <p>Share your thoughts and expertise by replying to discussions and contributing valuable insights.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👤</div>
+                    <h3>User Profiles</h3>
+                    <p>Build your professional profile, showcase your expertise, and track your contributions.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Search & Filter</h3>
+                    <p>Easily find discussions using advanced search and filtering options by category and tags.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>Moderation Tools</h3>
+                    <p>Moderators can manage content, enforce community guidelines, and maintain forum quality.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Real-time Updates</h3>
+                    <p>Stay informed with real-time notifications about replies to your discussions and mentions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about section-padding">
+        <div class="container">
+            <h2 class="text-center mb-4">About E-Forum</h2>
+            <p class="text-center">E-Forum is a comprehensive online discussion platform designed to facilitate knowledge sharing, professional networking, and community engagement. Our platform provides a secure, user-friendly environment where individuals can discuss topics of interest, share expertise, and build meaningful connections with like-minded professionals.</p>
+        </div>
+    </section>
+
+    <!-- Stats Section (Optional) -->
+    <?php
+    // If you want to show live stats, add this:
+    /*
+    try {
+        require_once 'pages/db_connect.php';
+        $userCount = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
+        $threadCount = $pdo->query("SELECT COUNT(*) FROM threads")->fetchColumn();
+        echo '<section class="stats section-padding">';
+        echo '<div class="container text-center">';
+        echo '<h2>Community Stats</h2>';
+        echo '<div class="stats-grid">';
+        echo '<div><h3>' . $userCount . '</h3><p>Registered Users</p></div>';
+        echo '<div><h3>' . $threadCount . '</h3><p>Active Discussions</p></div>';
+        echo '</div></div></section>';
+    } catch (Exception $e) {
+        // Silently fail if database not available
+    }
+    */
+    ?>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container text-center">
+            <p>&copy; <?php echo date('Y'); ?> E-Forum. All rights reserved. | 
+               <a href="#" style="color: var(--accent-color);">Privacy Policy</a> | 
+               <a href="#" style="color: var(--accent-color);">Terms of Service</a></p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Links -->
+    <script src="js/main.js"></script>
+</body>
+</html>

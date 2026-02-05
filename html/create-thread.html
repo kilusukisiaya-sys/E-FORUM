@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="E-Forum Create New Discussion">
+    <title>Create Discussion - E-Forum</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/create-thread.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="navbar-brand"><a href="../index.html" style="color: var(--surface-color);">E-Forum</a></div>
+            <ul class="navbar-nav">
+                <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+                <li><a href="categories.html" class="nav-link">Categories</a></li>
+                <li><a href="profile.html" class="nav-link">Profile</a></li>
+                <li><a href="#" id="logoutBtn" class="nav-link">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-5">
+        <!-- Page Header -->
+        <div class="page-header mb-5">
+            <h1>Create New Discussion</h1>
+            <p>Start a new discussion and engage with the community</p>
+        </div>
+
+        <!-- Create Thread Form -->
+        <div class="create-thread-card">
+            <form id="createThreadForm" class="create-thread-form">
+                <div class="form-group">
+                    <label for="title">Discussion Title</label>
+                    <input 
+                        type="text" 
+                        id="title" 
+                        name="title" 
+                        class="form-control" 
+                        placeholder="Enter a clear and descriptive title"
+                        required>
+                    <small class="error-message" id="titleError"></small>
+                    <small class="form-hint">Title should be clear and descriptive (5-100 characters)</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select id="category" name="category" class="form-control" required>
+                        <option value="">Select a category</option>
+                        <option value="technology">Technology</option>
+                        <option value="business">Business</option>
+                        <option value="education">Education</option>
+                        <option value="health">Health</option>
+                        <option value="entertainment">Entertainment</option>
+                    </select>
+                    <small class="error-message" id="categoryError"></small>
+                </div>
+
+                <div class="form-group">
+                    <label for="content">Discussion Content</label>
+                    <textarea 
+                        id="content" 
+                        name="content" 
+                        class="form-control" 
+                        placeholder="Describe your discussion topic in detail..."
+                        rows="8"
+                        required></textarea>
+                    <small class="error-message" id="contentError"></small>
+                    <small class="form-hint">Provide detailed content to encourage meaningful discussions</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="tags">Tags (Optional)</label>
+                    <input 
+                        type="text" 
+                        id="tags" 
+                        name="tags" 
+                        class="form-control" 
+                        placeholder="Enter tags separated by commas (e.g., javascript, web-development)">
+                    <small class="form-hint">Tags help others find your discussion</small>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="isPinned" name="isPinned">
+                        Pin this discussion (Moderators only)
+                    </label>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-accent">Create Discussion</button>
+                    <a href="dashboard.html" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Guidelines Section -->
+        <div class="guidelines-section mt-5">
+            <h3>Discussion Guidelines</h3>
+            <ul class="guidelines-list">
+                <li>Be respectful and constructive in your discussions</li>
+                <li>Avoid spam, promotional content, and off-topic posts</li>
+                <li>Use clear and descriptive titles for your discussions</li>
+                <li>Provide sufficient context and details in your posts</li>
+                <li>Search for existing discussions before creating a new one</li>
+                <li>Follow the community code of conduct</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer mt-5">
+        <div class="container text-center">
+            <p>&copy; 2025 E-Forum. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Alert Messages -->
+    <div id="alertContainer"></div>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/create-thread.js"></script>
+</body>
+</html>

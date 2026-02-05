@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="E-Forum Admin Panel">
+    <title>Admin Panel - E-Forum</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="navbar-brand"><a href="../index.html" style="color: var(--surface-color);">E-Forum Admin</a></div>
+            <ul class="navbar-nav">
+                <li><a href="admin.html" class="nav-link">Dashboard</a></li>
+                <li><a href="#users" class="nav-link">Users</a></li>
+                <li><a href="#content" class="nav-link">Content</a></li>
+                <li><a href="#reports" class="nav-link">Reports</a></li>
+                <li><a href="#" id="logoutBtn" class="nav-link">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-5">
+        <!-- Admin Header -->
+        <div class="admin-header mb-5">
+            <h1>Admin Dashboard</h1>
+            <p>Manage forum content, users, and moderation</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid mb-5">
+            <div class="stat-card">
+                <div class="stat-icon">U</div>
+                <div class="stat-info">
+                    <p class="stat-label">Total Users</p>
+                    <p class="stat-value" id="totalUsers">0</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">D</div>
+                <div class="stat-info">
+                    <p class="stat-label">Discussions</p>
+                    <p class="stat-value" id="totalDiscussions">0</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">R</div>
+                <div class="stat-info">
+                    <p class="stat-label">Reports</p>
+                    <p class="stat-value" id="totalReports">0</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">M</div>
+                <div class="stat-info">
+                    <p class="stat-label">Moderators</p>
+                    <p class="stat-value" id="totalModerators">0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs Navigation -->
+        <div class="admin-tabs mb-4">
+            <button class="tab-btn active" data-tab="users">User Management</button>
+            <button class="tab-btn" data-tab="content">Content Moderation</button>
+            <button class="tab-btn" data-tab="reports">Reported Content</button>
+        </div>
+
+        <!-- Users Tab -->
+        <div id="usersTab" class="tab-content active">
+            <div class="admin-section">
+                <h3>Manage Users</h3>
+                <div class="search-box mb-3">
+                    <input type="text" id="userSearch" class="form-control" placeholder="Search users...">
+                </div>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Joined</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersList">
+                        <tr>
+                            <td colspan="6" class="text-center">Loading users...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Content Tab -->
+        <div id="contentTab" class="tab-content">
+            <div class="admin-section">
+                <h3>Content Moderation</h3>
+                <div class="search-box mb-3">
+                    <input type="text" id="contentSearch" class="form-control" placeholder="Search content...">
+                </div>
+                <div id="contentList" class="content-list">
+                    <div class="loading-spinner">Loading content...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports Tab -->
+        <div id="reportsTab" class="tab-content">
+            <div class="admin-section">
+                <h3>Reported Content</h3>
+                <div id="reportsList" class="reports-list">
+                    <div class="loading-spinner">Loading reports...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Action Modal -->
+    <div id="userActionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>User Actions</h2>
+                <button class="modal-close" id="closeUserModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="userActionSelect">Select Action</label>
+                    <select id="userActionSelect" class="form-control">
+                        <option value="">Choose an action</option>
+                        <option value="promote">Promote to Moderator</option>
+                        <option value="demote">Demote from Moderator</option>
+                        <option value="suspend">Suspend User</option>
+                        <option value="ban">Ban User</option>
+                        <option value="activate">Activate User</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="actionReason">Reason (Optional)</label>
+                    <textarea id="actionReason" class="form-control" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelUserActionBtn">Cancel</button>
+                <button type="button" class="btn btn-accent" id="confirmUserActionBtn">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer mt-5">
+        <div class="container text-center">
+            <p>&copy; 2025 E-Forum. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Alert Messages -->
+    <div id="alertContainer"></div>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/admin.js"></script>
+</body>
+</html>

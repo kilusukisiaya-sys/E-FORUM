@@ -1,0 +1,200 @@
+<?php
+session_start();
+require_once 'db_connect.php';
+
+// Enable error reporting
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit;
+}
+
+// Fetch user data
+$userId = $_SESSION['user_id'];
+try {
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
+    $stmt->execute([$userId]);
+    $user = $stmt->fetch();
+    
+    if (!$user) {
+        session_destroy();
+        header("Location: login.php");
+        exit;
+    }
+    
+    // Fetch user stats
+    $threadCount = $pdo->prepare("SELECT COUNT(*) FROM threads WHERE user_id = ?")->execute([$userId])->fetchColumn();
+    $replyCount = $pdo->prepare("SELECT COUNT(*) FROM replies WHERE user_id = ?")->execute([$userId])->fetchColumn();
+    
+} catch (PDOException $e) {
+    die("Database error: " . $e->getMessage());
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="E-Forum User Profile">
+    <title>Profile - E-Forum</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="navbar-brand"><a href="../index.php" style="color: var(--surface-color); text-decoration: none;">E-Forum</a></div>
+            <ul class="navbar-nav">
+                <li><a href="dashboard.php" class="nav-link">Dashboard</a></li>
+                <li><a href="categories.php" class="nav-link">Categories</a></li>
+                <li><a href="profile.php" class="nav-link active">Profile</a></li>
+                <li><a href="logout.php" id="logoutBtn" class="nav-link">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-5">
+        <!-- Profile Header -->
+        <div class="profile-header mb-5">
+            <div class="profile-cover"></div>
+            <div class="profile-info">
+                <div class="profile-avatar">
+                    <?php 
+                    $initials = strtoupper(substr($user['username'], 0, 2));
+                    echo '<span class="avatar-text">' . $initials . '</span>';
+                    ?>
+                </div>
+                <div class="profile-details">
+                    <h1><?php echo htmlspecialchars($user['username']); ?></h1>
+                    <p class="profile-username">@<?php echo htmlspecialchars($user['username']); ?></p>
+                    <p class="profile-bio"><?php echo htmlspecialchars($user['bio'] ?? 'No bio yet'); ?></p>
+                    <div class="profile-stats">
+                        <div class="stat">
+                            <span class="stat-value"><?php echo $threadCount; ?></span>
+                            <span class="stat-label">Discussions</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value"><?php echo $replyCount; ?></span>
+                            <span class="stat-label">Replies</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value"><?php echo date('Y', strtotime($user['created_at'])); ?></span>
+                            <span class="stat-label">Member Since</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-actions">
+                    <button id="editProfileBtn" class="btn btn-secondary">Edit Profile</button>
+                    <button id="settingsBtn" class="btn btn-secondary">Settings</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs Navigation -->
+        <div class="profile-tabs mb-4">
+            <button class="tab-btn active" data-tab="discussions">My Discussions</button>
+            <button class="tab-btn" data-tab="replies">My Replies</button>
+            <button class="tab-btn" data-tab="activity">Activity</button>
+        </div>
+
+        <!-- Tab Content -->
+        <div id="discussionsTab" class="tab-content active">
+            <div id="userDiscussionsList" class="discussions-list">
+                <?php
+                $userThreads = $pdo->prepare("SELECT * FROM threads WHERE user_id = ? ORDER BY created_at DESC LIMIT 10");
+                $userThreads->execute([$userId]);
+                $threads = $userThreads->fetchAll();
+                
+                if (count($threads) > 0): 
+                    foreach ($threads as $thread): ?>
+                        <div class="thread-item">
+                            <h4><a href="thread.php?id=<?php echo $thread['id']; ?>"><?php echo htmlspecialchars($thread['title']); ?></a></h4>
+                            <p class="text-muted"><?php echo date('M d, Y', strtotime($thread['created_at'])); ?></p>
+                        </div>
+                    <?php endforeach; 
+                else: ?>
+                    <p class="text-muted">You haven't created any discussions yet.</p>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <div id="repliesTab" class="tab-content">
+            <div id="userRepliesList" class="replies-list">
+                <?php
+                $userReplies = $pdo->prepare("SELECT r.*, t.title, t.id as thread_id FROM replies r 
+                                             JOIN threads t ON r.thread_id = t.id 
+                                             WHERE r.user_id = ? ORDER BY r.created_at DESC LIMIT 10");
+                $userReplies->execute([$userId]);
+                $replies = $userReplies->fetchAll();
+                
+                if (count($replies) > 0): 
+                    foreach ($replies as $reply): ?>
+                        <div class="reply-item">
+                            <h4>Reply to: <a href="thread.php?id=<?php echo $reply['thread_id']; ?>"><?php echo htmlspecialchars($reply['title']); ?></a></h4>
+                            <p><?php echo substr(htmlspecialchars($reply['content']), 0, 150); ?>...</p>
+                            <p class="text-muted"><?php echo date('M d, Y', strtotime($reply['created_at'])); ?></p>
+                        </div>
+                    <?php endforeach; 
+                else: ?>
+                    <p class="text-muted">You haven't replied to any discussions yet.</p>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <div id="activityTab" class="tab-content">
+            <div id="userActivityList" class="activity-list">
+                <p class="text-muted">Recent activity will appear here.</p>
+                <!-- You can implement activity log later -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="editProfileModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Profile</h2>
+                <button class="modal-close" id="closeEditModal">&times;</button>
+            </div>
+            <form id="editProfileForm" class="modal-body" method="POST" action="update-profile.php">
+                <div class="form-group">
+                    <label for="editUsername">Username</label>
+                    <input type="text" id="editUsername" name="username" class="form-control" 
+                           value="<?php echo htmlspecialchars($user['username']); ?>" required>
+                </div>
+                <div class="form-group">
+                    <label for="editEmail">Email</label>
+                    <input type="email" id="editEmail" name="email" class="form-control" 
+                           value="<?php echo htmlspecialchars($user['email']); ?>" required>
+                </div>
+                <div class="form-group">
+                    <label for="editBio">Bio</label>
+                    <textarea id="editBio" name="bio" class="form-control" rows="4"><?php echo htmlspecialchars($user['bio'] ?? ''); ?></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelEditBtn">Cancel</button>
+                    <button type="submit" class="btn btn-accent">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer mt-5">
+        <div class="container text-center">
+            <p>&copy; <?php echo date('Y'); ?> E-Forum. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Alert Messages -->
+    <div id="alertContainer"></div>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/profile.js"></script>
+</body>
+</html>
